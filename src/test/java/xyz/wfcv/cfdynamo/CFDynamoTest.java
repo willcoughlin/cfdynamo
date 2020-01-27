@@ -1,4 +1,4 @@
-package xyz.wfcv;
+package xyz.wfcv.cfdynamo;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

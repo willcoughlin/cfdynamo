@@ -1,9 +1,5 @@
-package xyz.wfcv;
+package xyz.wfcv.cfdynamo;
 
-/**
- * Hello world!
- *
- */
 public class CFDynamo {
     
     public static void main( String[] args )
