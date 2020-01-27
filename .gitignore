@@ -1,6 +1,9 @@
 # vs code
 .vscode/
 
+# eclipse
+.settings/
+
 # maven
 target/
 pom.xml.tag
