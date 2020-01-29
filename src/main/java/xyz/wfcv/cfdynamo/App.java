@@ -1,8 +1,9 @@
 package xyz.wfcv.cfdynamo;
 
 import org.apache.commons.cli.*;
-
-import java.io.IOException;
+import xyz.wfcv.cfdynamo.input.FileUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 public class App {
     
@@ -30,20 +31,13 @@ public class App {
 
         // validate input
         var arg = cmd.getArgs()[0];
-
-        InputHandler inputHandler = null;
+        List<String> targetFilePaths = new ArrayList<>();
         try {
-            inputHandler = new InputHandler(arg, cmd.hasOption("d"));
+            targetFilePaths = FileUtils.ValidateAndGetAbsolutePaths(arg, cmd.hasOption("d"));
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
-        catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        // get target files
-        var targetFilePaths = inputHandler.getTargetFilePaths();
 
         System.out.println("Target files discovered: ");
         targetFilePaths.forEach(it -> System.out.println("\t" + it));
