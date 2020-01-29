@@ -1,15 +1,20 @@
 package xyz.wfcv.cfdynamo;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.cli.*;
 import xyz.wfcv.cfdynamo.input.FileUtils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class App {
-    
     public static void main(String[] args) {
         new App(args).Run();
     }
+
+    private List<String> targetFilePaths;
 
     private App(String[] args) {
         var options = new Options();
@@ -31,7 +36,6 @@ public class App {
 
         // validate input
         var arg = cmd.getArgs()[0];
-        List<String> targetFilePaths = new ArrayList<>();
         try {
             targetFilePaths = FileUtils.validateAndGetAbsolutePaths(arg, cmd.hasOption("d"));
         } catch (IllegalArgumentException e) {
@@ -41,11 +45,21 @@ public class App {
 
         System.out.println("Target files discovered: ");
         targetFilePaths.forEach(it -> System.out.println("\t" + it));
-
-        // TODO continue implementation
     }
 
     private void Run() {
+        if (targetFilePaths == null || targetFilePaths.isEmpty()) {
+            System.err.println("No class files have been discovered yet");
+            System.exit(1);
+        }
 
+        for (String path : targetFilePaths) {
+            JavaClass ddbClass;
+            try {
+                ddbClass = new ClassParser(path).parse();
+            } catch (IOException e) {
+                System.err.println("Failed to read class file: " + path);
+            }
+        }
     }
 }
