@@ -33,7 +33,7 @@ public class App {
         var arg = cmd.getArgs()[0];
         List<String> targetFilePaths = new ArrayList<>();
         try {
-            targetFilePaths = FileUtils.ValidateAndGetAbsolutePaths(arg, cmd.hasOption("d"));
+            targetFilePaths = FileUtils.validateAndGetAbsolutePaths(arg, cmd.hasOption("d"));
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
             System.exit(1);

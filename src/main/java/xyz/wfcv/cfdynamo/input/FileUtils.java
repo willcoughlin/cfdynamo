@@ -20,7 +20,7 @@ public class FileUtils {
      * @param path
      * @param isDir
      */
-    public static List<String> ValidateAndGetAbsolutePaths(String path, Boolean isDir) {
+    public static List<String> validateAndGetAbsolutePaths(String path, Boolean isDir) {
         List<String> targetFilePaths = new ArrayList<String>();
         var file = new File(path);
         // if nothing exists there
@@ -57,7 +57,7 @@ public class FileUtils {
     private static List<String> listFilesInDirectory(String path) {
         try (var paths = Files.list(Paths.get(path))) {
             return paths
-                    .filter(it -> Files.isRegularFile(it) && it.endsWith(".class"))
+                    .filter(it -> Files.isRegularFile(it) && it.toString().endsWith(".class"))
                     .map(it -> it.toAbsolutePath().toString())
                     .collect(Collectors.toList());
         } catch (IOException ex) {
