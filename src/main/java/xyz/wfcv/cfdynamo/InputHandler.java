@@ -69,9 +69,8 @@ public class InputHandler {
     private static List<String> listFilesInDirectory(String path) throws IOException {
         try (var paths = Files.list(Paths.get(path))) {
             return paths
-                    .filter(Files::isRegularFile)
-                    .filter(it -> it.endsWith(".class"))
-                    .map(Path::toString)
+                    .filter(it -> Files.isRegularFile(it) && it.endsWith(".class"))
+                    .map(it -> it.toAbsolutePath().toString())
                     .collect(Collectors.toList());
         }
     }
