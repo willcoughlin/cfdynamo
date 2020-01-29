@@ -7,7 +7,7 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class CFDynamoTest 
+public class AppTest
     extends TestCase
 {
     /**
@@ -15,7 +15,7 @@ public class CFDynamoTest
      *
      * @param testName name of the test case
      */
-    public CFDynamoTest( String testName )
+    public AppTest(String testName )
     {
         super( testName );
     }
@@ -25,7 +25,7 @@ public class CFDynamoTest
      */
     public static Test suite()
     {
-        return new TestSuite( CFDynamoTest.class );
+        return new TestSuite( AppTest.class );
     }
 
     /**

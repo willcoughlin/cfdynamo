@@ -28,7 +28,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>xyz.wfcv.cfdynamo.CFDynamo</mainClass>
+                  <mainClass>xyz.wfcv.cfdynamo.App</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
