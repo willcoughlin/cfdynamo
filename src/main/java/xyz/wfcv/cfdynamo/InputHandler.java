@@ -16,22 +16,36 @@ public class InputHandler {
     private List<String> targetFilePaths;
     private String parentDirectory;
 
-    private InputHandler() { }
-
+    /**
+     * Constructor. Instantiates input handler which performs validation on file type and existence.
+     * @param path File or directory path
+     * @param isDir
+     * @throws IllegalArgumentException if input is not class file or doesn't exist
+     * @throws IOException
+     */
     public InputHandler(String path, Boolean isDir) throws IllegalArgumentException, IOException {
         var file = new File(path);
+        // if nothing exists there
         if (!file.exists()) {
             throw new IllegalArgumentException(
                     String.format("No %s exists at path: %s\n", (isDir ? "directory" : "file"), path));
         }
 
         if (isDir) {
+            // if directory flag set but not a directory
             if (!file.isDirectory()) {
                 throw new IllegalArgumentException("Input supplied with -d flag, but is not a directory: " + path);
             }
             parentDirectory = path;
             targetFilePaths = listFilesInDirectory(path);
-        } else {
+            // make sure there are class files in the directory
+            if (targetFilePaths.size() == 0) {
+                throw new IllegalArgumentException("No .class files in directory: " + path);
+            }
+        } else {  // its a single file
+            if (!path.endsWith(".class")) {
+                throw new IllegalArgumentException("Input is not a class file: " + path);
+            }
             parentDirectory = file.getAbsoluteFile().getParent();
             targetFilePaths = new ArrayList<>();
             targetFilePaths.add(path);
@@ -56,6 +70,7 @@ public class InputHandler {
         try (var paths = Files.list(Paths.get(path))) {
             return paths
                     .filter(Files::isRegularFile)
+                    .filter(it -> it.endsWith(".class"))
                     .map(Path::toString)
                     .collect(Collectors.toList());
         }
