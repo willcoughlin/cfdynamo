@@ -1,5 +1,7 @@
 package xyz.wfcv.cfdynamo;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.cli.*;
@@ -15,6 +17,7 @@ public class App {
     }
 
     private List<String> targetFilePaths;
+    private DynamoDB db;
 
     private App(String[] args) {
         var options = new Options();
@@ -45,6 +48,10 @@ public class App {
 
         System.out.println("Target files discovered: ");
         targetFilePaths.forEach(it -> System.out.println("\t" + it));
+
+        // create DynamoDB connection
+        var ddbClient = AmazonDynamoDBClientBuilder.standard().build();
+        db = new DynamoDB(ddbClient);
     }
 
     private void Run() {
@@ -60,6 +67,8 @@ public class App {
             } catch (IOException e) {
                 System.err.println("Failed to read class file: " + path);
             }
+
+
         }
     }
 }
