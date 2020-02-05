@@ -17,3 +17,6 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 .idea/uiDesigner.xml
+
+src/main/java/xyz/wfcv/cfdynamo/TestClass.java
+
