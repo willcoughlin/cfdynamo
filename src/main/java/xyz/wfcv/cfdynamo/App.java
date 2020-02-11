@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.cli.*;
+import xyz.wfcv.cfdynamo.input.ClassToTableMapper;
 import xyz.wfcv.cfdynamo.input.FileUtils;
 
 import java.io.IOException;
@@ -61,14 +62,17 @@ public class App {
         }
 
         for (String path : targetFilePaths) {
-            JavaClass ddbClass;
+            JavaClass ddbClass = null;
             try {
                 ddbClass = new ClassParser(path).parse();
             } catch (IOException e) {
                 System.err.println("Failed to read class file: " + path);
             }
+            if (ddbClass == null) {
+                System.exit(1);
+            }
 
-
+            var mapper = new ClassToTableMapper(db, ddbClass);
         }
     }
 }
