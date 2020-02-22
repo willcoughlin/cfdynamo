@@ -1,15 +1,13 @@
 package xyz.wfcv.cfdynamo;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import org.apache.bcel.classfile.ClassParser;
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.commons.cli.*;
-import xyz.wfcv.cfdynamo.input.ClassToTableMapper;
+import xyz.wfcv.cfdynamo.input.CreateTableRequestFactory;
 import xyz.wfcv.cfdynamo.input.FileUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -18,7 +16,7 @@ public class App {
     }
 
     private List<String> targetFilePaths;
-    private DynamoDB db;
+    private AmazonDynamoDB dbClient;
 
     private App(String[] args) {
         var options = new Options();
@@ -51,28 +49,29 @@ public class App {
         targetFilePaths.forEach(it -> System.out.println("\t" + it));
 
         // create DynamoDB connection
-        var ddbClient = AmazonDynamoDBClientBuilder.standard().build();
-        db = new DynamoDB(ddbClient);
+        dbClient = AmazonDynamoDBClientBuilder.standard().build();
+        System.out.println("Instantiated with connection to DynamoDB.");
     }
 
     private void Run() {
+        System.out.println("Processing target files...");
+
         if (targetFilePaths == null || targetFilePaths.isEmpty()) {
             System.err.println("No class files have been discovered yet");
             System.exit(1);
         }
 
-        for (String path : targetFilePaths) {
-            JavaClass ddbClass = null;
-            try {
-                ddbClass = new ClassParser(path).parse();
-            } catch (IOException e) {
-                System.err.println("Failed to read class file: " + path);
-            }
-            if (ddbClass == null) {
-                System.exit(1);
-            }
+        var classes = FileUtils.loadClassesFromFiles(targetFilePaths);
 
-            var mapper = new ClassToTableMapper(db, ddbClass);
+        if (classes == null) {
+            System.err.println("Failed to load Classes from input file(s)");
+            System.exit(1);
+        }
+
+        for (var tableClass : classes) {
+            var request = CreateTableRequestFactory.createWithTableClass(dbClient, tableClass);
+            dbClient.createTable(request);
+            System.out.println("Created table for " + tableClass.getName());
         }
     }
 }

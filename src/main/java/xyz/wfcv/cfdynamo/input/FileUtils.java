@@ -1,7 +1,12 @@
 package xyz.wfcv.cfdynamo.input;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -42,10 +47,32 @@ public class FileUtils {
             if (!path.endsWith(".class")) {
                 throw new IllegalArgumentException("Input is not a class file: " + path);
             }
-            targetFilePaths = new ArrayList<>();
-            targetFilePaths.add(path);
+            var absolutePath = new File(path).getAbsolutePath();
+            targetFilePaths.add(absolutePath);
         }
         return targetFilePaths;
+    }
+
+    /**
+     * Given a list of absolute file paths, loads classes using URLClassloader.
+     * @param absolutePaths List of file paths
+     * @return List of Class literals
+     * @throws IllegalArgumentException
+     */
+    public static List<Class> loadClassesFromFiles(List<String> absolutePaths) throws IllegalArgumentException {
+        if (absolutePaths.isEmpty()) return null;
+        try {
+            var classes = new ArrayList<Class>();
+            var parentDir = new File(absolutePaths.get(0)).getParentFile();
+            var classLoader = new URLClassLoader(new URL[]{parentDir.toURI().toURL()});
+            for (var path : absolutePaths) {
+                var className = new ClassParser(path).parse().getClassName();
+                classes.add(classLoader.loadClass(className));
+            }
+            return classes;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     /**
