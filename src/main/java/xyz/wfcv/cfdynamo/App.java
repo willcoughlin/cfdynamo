@@ -32,7 +32,7 @@ public class App {
         }
 
         if (cmd.getArgs().length == 0) {
-            new HelpFormatter().printHelp("cfdynamo [option] input", options);
+            new HelpFormatter().printHelp("java -jar cfdynamo.jar [option] <input>", options);
             System.exit(0);
         }
 
