@@ -24,6 +24,22 @@
           </excludes>
         </configuration>
       </plugin>
+      <!-- jar plugin gets bound to nonexistent phase -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>none</phase>
+            <configuration>
+              <finalName>unwanted</finalName>
+              <classifier>unwanted</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -35,6 +51,8 @@
               <goal>single</goal>
             </goals>
             <configuration>
+              <finalName>cfdynamo</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
               <archive>
                 <manifest>
                   <mainClass>xyz.wfcv.cfdynamo.App</mainClass>
