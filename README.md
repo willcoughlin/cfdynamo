@@ -84,3 +84,4 @@ java -jar cfdynamo.jar -d entities
   >Note that [...] all secondary indexes are initialized with the default projection type - KEY_ONLY
   
   [Source](https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/dynamodbv2/datamodeling/AbstractDynamoDBMapper.html#generateCreateTableRequest-java.lang.Class-)
+- Additionally, it is impossible to supply Java source files as input. It would be nice to have this capability in the future.
