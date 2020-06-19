@@ -1,4 +1,4 @@
-# cfdynamo
+# code-first-dynamodb
 Java code-first DynamoDB table creation
 
 ## Prerequisites
